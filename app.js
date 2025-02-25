@@ -7,7 +7,11 @@ import jwt from 'jsonwebtoken';
 import upload from './config/multer.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+dotenv.config();
 
+const PORT = process.env.PORT || 5000;
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -75,7 +79,7 @@ app.post('/register', async (req, res) => {
         });
 
         // ✅ Generate Token
-        const token = jwt.sign({ userId: newUser._id }, 'secretkey', { expiresIn: '1h' });
+        const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, { expiresIn: '1h' });
 
         // ✅ Set Cookie
         res.cookie('token', token, {
@@ -123,7 +127,7 @@ app.post('/login', async (req, res) => {
             }
 
             // ✅ Generate Token
-            const token = jwt.sign({ userId: user._id }, 'secretkey', { expiresIn: '1h' });
+            const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
 
             // ✅ Set Cookie
             res.cookie('token', token, {
@@ -157,7 +161,7 @@ function isLoggedIn(req, res, next) {
     const token = req.cookies.token;
     if (!token) return res.status(401).send('You must be logged in to access this page');
 
-    jwt.verify(token, 'secretkey', (err, user) => {
+    jwt.verify(token, JWT_SECRET, (err, user) => {
         if (err) return res.status(401).send('Session expired. Please login again.');
 
         req.user = user; // ✅ Store user data in `req`
@@ -337,6 +341,7 @@ app.post('/posts/:id/like', isLoggedIn, async (req, res) => {
 });
 
 
-app.listen(3000, () => {
-    console.log("Server is running on port 3000");
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
+

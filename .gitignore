@@ -4,3 +4,5 @@ echo ".env" >> .gitignore
 echo "dist/" >> .gitignore
 echo ".DS_Store" >> .gitignore
 echo "coverage/" >> .gitignore
+
+node_modules

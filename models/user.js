@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 
-mongoose.connect("mongodb://127.0.0.1:27017/dataAssociationProj")
+dotenv.config(); // Load environment variables
+
+mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("MongoDB Connected Successfully ✅"))
     .catch((err) => console.error("MongoDB Connection Error ❌", err));
 
